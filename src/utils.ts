@@ -1,6 +1,6 @@
 import { createKeyPairSignerFromBytes, type KeyPairSigner } from "@solana/web3.js";
 import fs from "fs/promises";
-import { resolve } from "path";
+import resolve from "resolve-dir";
 
 export async function loadKeypair(jsonPath: string): Promise<KeyPairSigner> {
   const fileContent = await fs.readFile(resolve(jsonPath), "utf-8");

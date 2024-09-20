@@ -1,6 +1,21 @@
-import { createSolanaRpc, generateKeyPair, generateKeyPairSigner, lamports } from "@solana/web3.js";
+import {
+  appendTransactionMessageInstruction,
+  createSolanaRpc,
+  createTransactionMessage,
+  generateKeyPair,
+  generateKeyPairSigner,
+  getSignatureFromTransaction,
+  lamports,
+  pipe,
+  sendAndConfirmTransactionFactory,
+  sendTransactionWithoutConfirmingFactory,
+  setTransactionMessageFeePayer,
+  setTransactionMessageLifetimeUsingBlockhash,
+  signTransactionMessageWithSigners,
+} from "@solana/web3.js";
 import { testRpcMethods } from "./rpcClients/rpcTester";
 import { loadKeypair } from "./utils";
+import { getTransferSolInstruction } from "@solana-program/system";
 
 async function main() {
   try {
@@ -10,13 +25,35 @@ async function main() {
     const keyPair = await generateKeyPairSigner();
     console.log("Generated public key:", keyPair.address);
 
+    const owner = await loadKeypair("~/.config/solana/id.json");
+    console.log("Owner public key:", owner.address);
+
     const payer = await loadKeypair("./payer.json");
     console.log("Loaded public key:", payer.address);
 
-    const tx1 = await rpc
-      .requestAirdrop(payer.address, lamports(BigInt(Math.pow(10, 9))), { commitment: "confirmed" })
-      .send();
-    console.log(`tx1: ${tx1}`);
+    const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
+
+    const transactionMessage = pipe(
+      createTransactionMessage({ version: 0 }),
+      tx => setTransactionMessageFeePayer(payer.address, tx),
+      tx => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
+      tx =>
+        appendTransactionMessageInstruction(
+          getTransferSolInstruction({
+            amount: lamports(BigInt(0.5 * Math.pow(10, 9))),
+            source: payer,
+            destination: owner.address,
+          }),
+          tx,
+        ),
+    );
+
+    const signedTransaction = await signTransactionMessageWithSigners(transactionMessage);
+    const sendTransaction = sendTransactionWithoutConfirmingFactory({ rpc });
+
+    await sendTransaction(signedTransaction, { commitment: "confirmed", skipPreflight: true });
+    const signature = getSignatureFromTransaction(signedTransaction);
+    console.log("Explorer link:", `https://explorer.solana.com/tx/${signature}?cluster=devnet`);
   } catch (error) {
     console.error("Main error:", error);
   }
