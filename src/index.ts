@@ -1,18 +1,9 @@
-import { shardedRpcClient, roundRobinRpcClient } from "./rpcClients";
-import { RpcTester } from "./rpcTester";
-
-async function testRpcMethods(clientType: "sharded" | "roundRobin") {
-  const rpcClient = clientType === "sharded" ? shardedRpcClient.createClient() : roundRobinRpcClient.createClient();
-  const tester = new RpcTester(rpcClient);
-  await tester.testMethods();
-}
+import { testRpcMethods } from "./rpcClients/rpcTester";
 
 async function main() {
   try {
-    console.log("Testing Sharded RPC Client:");
     await testRpcMethods("sharded");
-
-    console.log("\nTesting Round Robin RPC Client:");
+    console.log("\n");
     await testRpcMethods("roundRobin");
   } catch (error) {
     console.error("Main error:", error);
