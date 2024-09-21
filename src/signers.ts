@@ -2,6 +2,7 @@ import { getTransferSolInstruction } from "@solana-program/system";
 import {
   address,
   appendTransactionMessageInstruction,
+  BASE_ACCOUNT_SIZE,
   compileTransaction,
   createSignableMessage,
   createTransactionMessage,
@@ -68,6 +69,7 @@ async function signTransactionWithSigners(transactionMessage: CompilableTransact
   await signMessage(signer, "Hello, world!");
   await signTransaction(signer, transactionMessage);
   await signTransactionWithSigners(transactionMessage);
+  BASE_ACCOUNT_SIZE
 }
 
 // async function signMessage(signer: MessagePartialSigner, message: string) {
