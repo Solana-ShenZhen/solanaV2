@@ -16,6 +16,7 @@
   "dependencies": {
     "@solana-program/system": "^0.5.1",
     "@solana/web3.js": "^2.0.0-rc.1",
+    "bs58": "^6.0.0",
     "resolve-dir": "^1.0.1"
   }
 }
