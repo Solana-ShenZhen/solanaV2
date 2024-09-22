@@ -1,7 +1,5 @@
 # @solana/signers
 
-# @solana/signers
-
 这个包为 Solana 中的消息和交易签名提供了一个抽象层。它可以独立使用，但也作为 Solana JavaScript SDK [`@solana/web3.js@rc`](https://github.com/solana-labs/solana-web3.js/tree/master/packages/library) 的一部分导出。
 
 你可以将签名者视为签署消息和交易的抽象方式。这可以使用加密密钥对、浏览器中的钱包适配器、用于测试目的的空操作签名者，或者你想要的任何东西。以下是使用 `CryptoKeyPair` 签名者的示例：
