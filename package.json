@@ -14,6 +14,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@solana-program/address-lookup-table": "^0.5.1",
+    "@solana-program/memo": "^0.5.1",
     "@solana-program/system": "^0.5.1",
     "@solana/web3.js": "^2.0.0-rc.1",
     "bs58": "^6.0.0",

@@ -4,6 +4,7 @@ import {
   appendTransactionMessageInstruction,
   BASE_ACCOUNT_SIZE,
   compileTransaction,
+  createKeyPairSignerFromPrivateKeyBytes,
   createSignableMessage,
   createTransactionMessage,
   generateKeyPairSigner,
@@ -23,6 +24,9 @@ import {
   type TransactionSigner,
 } from "@solana/web3.js";
 import bs58 from "bs58";
+import { loadKeypair } from "./utils";
+import fs from "fs/promises";
+import resolve from "resolve-dir";
 
 function getTransferSolTransactionMessage(signer: TransactionSigner) {
   const instruction = getTransferSolInstruction({
@@ -71,8 +75,24 @@ async function signTransactionWithSigners(transactionMessage: CompilableTransact
 //   await signMessage(signer, "Hello, world!");
 //   await signTransaction(signer, transactionMessage);
 //   await signTransactionWithSigners(transactionMessage);
-//   BASE_ACCOUNT_SIZE
+//   BASE_ACCOUNT_SIZE;
 // }
+
+{
+  const seed = [
+    232, 27, 166, 70, 79, 203, 13, 160, 116, 239, 80, 146, 125, 104, 100, 54, 71, 124, 252, 221, 107, 101, 227, 26, 206,
+    153, 244, 48, 212, 177, 46, 247,
+  ];
+  // crypto.getRandomValues(seed);
+  console.log(`Private key: ${seed}`);
+  const signer1 = await createKeyPairSignerFromPrivateKeyBytes(new Uint8Array(seed));
+  console.log(`Public key: ${bs58.decode(signer1.address)}`);
+  // console.log(`Keypair: ${JSON.stringify(signer.keyPair, null, 2)}`);
+  const signer2 = await loadKeypair("./payer.json");
+  console.log(`Public key: ${bs58.decode(signer2.address)}`);
+  // console.log(`Public key: ${bs58.decode(signer.keyPair.publicKey.toString())}`);
+  // console.log(`Secret key: ${bs58.decode(signer.keyPair.privateKey.toString())}`);
+}
 
 // async function signMessage(signer: MessagePartialSigner, message: string) {
 //   const [signatureDictionary] = await signer.signMessages([createSignableMessage(message)]);
