@@ -17,6 +17,8 @@ import {
   type CompilableTransactionMessage,
   type CompiledTransactionMessage,
   type MessagePartialSigner,
+  type SignableMessage,
+  type SignatureDictionary,
   type TransactionPartialSigner,
   type TransactionSigner,
 } from "@solana/web3.js";
@@ -62,15 +64,15 @@ async function signTransactionWithSigners(transactionMessage: CompilableTransact
   console.log(`Signature: ${getBase58Decoder().decode(signature!)}`);
 }
 
-{
-  const signer = await generateKeyPairSigner();
+// {
+//   const signer = await generateKeyPairSigner();
 
-  const transactionMessage = getTransferSolTransactionMessage(signer);
-  await signMessage(signer, "Hello, world!");
-  await signTransaction(signer, transactionMessage);
-  await signTransactionWithSigners(transactionMessage);
-  BASE_ACCOUNT_SIZE
-}
+//   const transactionMessage = getTransferSolTransactionMessage(signer);
+//   await signMessage(signer, "Hello, world!");
+//   await signTransaction(signer, transactionMessage);
+//   await signTransactionWithSigners(transactionMessage);
+//   BASE_ACCOUNT_SIZE
+// }
 
 // async function signMessage(signer: MessagePartialSigner, message: string) {
 //   const [signatureDictionary] = await signer.signMessages([createSignableMessage(message)]);
